@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "fecs src",
     "build:amd": "sh tool/build-amd.sh",
-    "build:commonjs": "sh tool/build-commonjs.sh"
+    "build:commonjs": "sh tool/build-commonjs.sh",
+    "build": "npm run build:amd && npm run build:commonjs"
   },
   "author": {
     "name": "ludafa",
