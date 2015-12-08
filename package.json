@@ -1,6 +1,6 @@
 {
   "name": "melon-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "melon-core",
   "main": "src/index.js",
   "scripts": {
