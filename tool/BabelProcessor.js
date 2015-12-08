@@ -100,7 +100,7 @@ Babel.prototype.afterAll = function (processContext) {
     if (!relativePath) {
         relativePath = path.join(
             moduleConfig.baseUrl || 'src',
-            'babelHelper.js'
+            'babelHelpers.js'
         );
     }
 

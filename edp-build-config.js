@@ -22,7 +22,7 @@ exports.getProcessors = function () {
     var lessProcessor = new LessCompiler();
     var cssProcessor = new CssCompressor();
     var moduleProcessor = new ModuleCompiler({
-        bizId: 'melon-json-schema-form'
+        bizId: 'melon-core'
     });
     var jsProcessor = new JsCompressor();
     var pathMapperProcessor = new PathMapper();
@@ -32,7 +32,7 @@ exports.getProcessors = function () {
         files: ['src/**/*.js']
     });
 
-    var babel = new BabelProcessor({
+    var amdBabel = new BabelProcessor({
         files: ['src/**/*.js'],
         compileOptions: {
             compact: false,
@@ -48,11 +48,35 @@ exports.getProcessors = function () {
         }
     });
 
+    var commonjsBabel = new BabelProcessor({
+        files: ['src/**/*.js'],
+        compileOptions: {
+            compact: false,
+            ast: false,
+            presets: [
+                'react'
+            ],
+            plugins: [
+                'external-helpers-2',
+                'transform-object-rest-spread',
+                'transform-es2015-destructuring',
+                'transform-es2015-block-scoped-functions',
+                'transform-es2015-block-scoping',
+                'transform-es2015-spread',
+                'transform-es2015-parameters'
+            ]
+        }
+    });
+
     return {
         amd: [
-            babel,
+            amdBabel,
             amdWrapper,
             moduleProcessor,
+            pathMapperProcessor
+        ],
+        commonjs: [
+            commonjsBabel,
             pathMapperProcessor
         ],
         release: [
@@ -65,10 +89,12 @@ exports.getProcessors = function () {
 exports.exclude = [
     '*.md',
     'dist',
+    '*.html',
+    'lib',
     'README',
     '.*',
-    '*.json',
     'dep',
+    'bower.json',
     'example',
     'tool',
     'doc',

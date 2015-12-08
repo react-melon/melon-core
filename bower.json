@@ -1,8 +1,8 @@
 {
-  "name": "melon-theme-lite",
+  "name": "melon-core",
   "version": "0.1.0",
-  "description": "a theme for melon supported ie8",
-  "main": "src/main.js",
+  "description": "melon-core",
+  "main": "dist/index.js",
   "license": "MIT",
   "author": {
     "name": "ludafa",
@@ -14,5 +14,11 @@
     "dep",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "underscore": "~1.8.3",
+    "react": "~0.14.3",
+    "melon-classname": "~0.1.1",
+    "react-motion": "~0.3.1"
+  }
 }
