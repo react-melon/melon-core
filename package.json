@@ -1,0 +1,35 @@
+{
+  "name": "melon-theme-lite",
+  "version": "0.1.0",
+  "description": "a theme for melon supported ie8",
+  "main": "src/main.js",
+  "scripts": {
+    "lint": "fecs src",
+    "build:amd": "sh tool/build-amd.sh"
+  },
+  "author": {
+    "name": "ludafa",
+    "email": "ludafa@outlook.com"
+  },
+  "edp": {
+    "wwwroot": "/",
+    "depDir": "dep",
+    "srcDir": "src",
+    "loaderAutoConfig": "js,htm,html,tpl,vm,phtml",
+    "loaderUrl": "http://s1.bdstatic.com/r/www/cache/ecom/esl/1-8-2/esl.js",
+    "dependencies": {}
+  },
+  "license": "MIT",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "devDependencies": {
+    "babel-core": "^6.2.1",
+    "babel-plugin-external-helpers-2": "^6.1.18",
+    "babel-plugin-syntax-object-rest-spread": "^6.1.18",
+    "babel-plugin-transform-object-rest-spread": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18"
+  }
+}
