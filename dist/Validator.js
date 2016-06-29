@@ -35,8 +35,9 @@
 
         Validator.prototype.resolveCheckers = function resolveCheckers() {
             var config = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-            var rules = this.rules;
 
+
+            var rules = this.rules;
 
             return rules.reduce(function (activeCheckers, checker) {
                 var name = checker.name;
@@ -59,7 +60,6 @@
 
             return this.resolveCheckers(component.props.rules).reduce(function (validity, checker) {
                 var check = checker.check;
-
                 var state = check(value, component);
                 validity.addState(state);
                 return validity;
@@ -79,6 +79,7 @@
     }();
 
     var validator = new Validator();
+
     exports['default'] = validator;
 
 
@@ -88,9 +89,11 @@
 
     validator.addRule({
         name: 'required',
-        check: function check(value, component) {
-            var requiredErrorMessage = component.props.rules.requiredErrorMessage;
+        check: function check(value, _ref) {
+            var props = _ref.props;
 
+
+            var requiredErrorMessage = props.rules.requiredErrorMessage;
 
             var isValid = Array.isArray(value) ? !!value.length : typeof value === 'string' ? value !== '' : value != null;
 

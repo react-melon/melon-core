@@ -5,7 +5,7 @@
 
 import React, {PropTypes} from 'react';
 import {create} from './classname/cxBuilder';
-import {default as V} from './validator/Validity';
+import V from './validator/Validity';
 
 const cx = create('Validity');
 

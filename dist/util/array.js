@@ -31,7 +31,7 @@
         var step = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
 
 
-        /* eslint-disable fecs-no-arguments */
+        /* eslint-disable prefer-rest-params */
         if (arguments.length <= 1) {
             stop = start || 0;
             start = 0;

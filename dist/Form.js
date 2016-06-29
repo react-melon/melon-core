@@ -58,8 +58,8 @@
         };
 
         Form.prototype.removeField = function removeField(field) {
-            var fields = this.fields;
 
+            var fields = this.fields;
 
             if (fields) {
                 this.fields = this.fields.filter(function (f) {

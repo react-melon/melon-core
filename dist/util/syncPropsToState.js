@@ -44,7 +44,9 @@
      * 获取需要同步到 state 中的 validity
      *
      * @param {ReactComponent} component 组件
-     * @param {Object} nextProps 新属性
+     * @param {string} value 新值
+     * @param {bool} disabled 是否可用
+     * @param {Object} customValidity 新属性
      * @return {module:Validity}
      */
     function getNextValidity(component, _ref) {
@@ -53,7 +55,7 @@
         var customValidity = _ref.customValidity;
 
 
-        // 如果被禁用了，禁用状态是不进行校验的。那么直接返回 null；
+        // 如果被禁用了，禁用状态是不进行校验的。那么直接返回 null
         if (disabled) {
             return null;
         }

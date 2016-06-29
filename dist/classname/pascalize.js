@@ -14,6 +14,7 @@
 })(this, function (module, babelHelpers, camelize) {
     'use strict';
 
+    /* eslint-disable fecs-max-calls-in-template */
     module.exports = function (source) {
 
         if (!source) {
