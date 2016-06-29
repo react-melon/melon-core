@@ -2,3 +2,4 @@ node_module
 dep
 dist
 src
+test

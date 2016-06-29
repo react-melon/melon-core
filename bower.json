@@ -1,24 +1,35 @@
 {
   "name": "melon-core",
-  "version": "0.1.2",
-  "description": "melon-core",
-  "main": "dist/index.js",
+  "version": "0.3.0",
+  "homepage": "https://github.com/react-melon/melon-core",
+  "authors": [
+    "ludafa@outlook.com"
+  ],
+  "description": "React ui components base project",
+  "main": "src/main",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "react",
+    "ui"
+  ],
   "license": "MIT",
-  "author": {
-    "name": "ludafa",
-    "email": "ludafa@outlook.com"
-  },
   "ignore": [
     "**/.*",
     "node_modules",
+    "bower_components",
     "dep",
     "test",
-    "tests"
+    "tests",
+    "lib",
+    "doc",
+    "example"
   ],
   "dependencies": {
-    "underscore": "~1.8.3",
-    "react": "~0.14.3",
-    "melon-classname": "~0.1.1",
-    "react-motion": "~0.3.1"
+    "react": "^0.14.8"
+  },
+  "devDependencies": {
+    "melon": "^0.2.31"
   }
 }

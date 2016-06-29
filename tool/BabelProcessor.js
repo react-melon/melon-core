@@ -5,33 +5,24 @@
 
 /* globals AbstractProcessor*/
 
-var babel = require('babel-core');
-var path = require('path');
-var util = require('util');
+'use strict';
+
+const babel = require('babel-core');
+const path = require('path');
 
 function Babel(options) {
     AbstractProcessor.call(this, options);
 }
 
-util.inherits(Babel, AbstractProcessor);
-
+Babel.prototype = new AbstractProcessor();
 Babel.prototype.name = 'Babel';
-
-Babel.DEFAULT_OPTIONS = {
-    /**
-     * 项目的配置文件
-     * @type {string}
-     */
-    configFile: 'module.conf',
-    files: ['src/**/*.js']
-};
 
 Babel.prototype.beforeAll = function (processContext) {
     AbstractProcessor.prototype.beforeAll.call(this, processContext);
     processContext.usedHelpers = [];
 };
 
-var FileInfo;
+let FileInfo;
 
 Babel.prototype.process = function (file, processContext, callback) {
 
@@ -50,20 +41,21 @@ Babel.prototype.process = function (file, processContext, callback) {
 
     var filePath = file.path;
 
+    var prefix = 'var babelHelpers = require("' + babelHelperRelativePath + '");\n';
+
     var result = babel.transform(
-        file.data,
+        prefix + file.data,
         Object.assign(
-            {},
-            this.compileOptions,
-            {filename: file.path}
+            {
+                filename: file.path
+            },
+            this.compileOptions
         )
     );
 
     var code = result.code;
 
     if (result.metadata.usedHelpers.length) {
-        var prefix = 'var babelHelpers = require("' + babelHelperRelativePath + '");\n';
-        code = prefix + code;
         processContext.usedHelpers = processContext
             .usedHelpers
             .concat(result.metadata.usedHelpers);
@@ -79,43 +71,23 @@ Babel.prototype.process = function (file, processContext, callback) {
 
 Babel.prototype.afterAll = function (processContext) {
 
-    var usedHelpers = ''
-        + babel.buildExternalHelpers(processContext.usedHelpers, 'var')
-        + '\nmodule.exports = babelHelpers;';
+    var usedHelpers = babel.buildExternalHelpers(processContext.usedHelpers, 'umd');
 
     var baseDir = processContext.baseDir;
+    var relativePath = path.relative(baseDir, 'src/babelHelpers.js');
+    var fullPath = path.join(baseDir, relativePath);
 
-    var configFile = path.resolve(baseDir, this.configFile);
-
-    var content = require('fs').readFileSync(configFile, 'UTF-8');
-
-    if (content.charCodeAt(0) === 0xFEFF) {
-        content = content.slice(1);
-    }
-
-    var moduleConfig = JSON.parse(content);
-
-    var relativePath = this.outputPath;
-
-    if (!relativePath) {
-        relativePath = path.join(
-            moduleConfig.baseUrl || 'src',
-            'babelHelpers.js'
-        );
-    }
-
-    var fileData = new FileInfo({
+    var helperFile = new FileInfo({
         data: usedHelpers,
-        extname: path.extname(relativePath).slice(1),
+        extname: 'js',
         path: relativePath,
-        fullPath: path.resolve(baseDir, relativePath)
+        fullPath: fullPath,
+        outputPath: relativePath
     });
 
-    processContext.addFile(fileData);
+    processContext.addFile(helperFile);
 
-    return fileData;
-
+    processContext.usedHelpers = null;
 };
-
 
 module.exports = Babel;

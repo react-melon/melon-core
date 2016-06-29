@@ -1,0 +1,9 @@
+{
+    "eslint": {
+        "rules": {
+            "fecs-prefer-destructure": ["off", "always"],
+            "fecs-use-for-of": ["off", "always"],
+            "fecs-valid-map-set": ["off", "always"]
+        }
+    }
+}

@@ -3,55 +3,41 @@
  * @author EFE
  */
 
-/* globals home, redirect, content, empty, autocss, file, less, stylus, proxyNoneExists */
+/* globals home, redirect, content, empty, autocss, file, less, stylus, header, proxyNoneExists */
 
+'use strict';
 
 exports.port = 8848;
 exports.directoryIndexes = true;
 exports.documentRoot = __dirname;
 
-var babel = require('babel-core');
+const babel = require('babel-core');
+const nib = require('nib');
+
+function amdify(context) {
+    context.content =  ''
+        + 'define(function (require, exports, module) {\n'
+        +     context.content
+        + '\n});';
+}
+
+exports.stylus = require('stylus');
 
 exports.getLocations = function () {
     return [
-        {
-            location: /\/$/,
-            handler: home('index.html')
-        },
-        {
-            location: /^\/redirect-local/,
-            handler: redirect('redirect-target', false)
-        },
-        {
-            location: /^\/redirect-remote/,
-            handler: redirect('http://www.baidu.com', false)
-        },
-        {
-            location: /^\/redirect-target/,
-            handler: content('redirectd!')
-        },
         {
             location: '/empty',
             handler: empty()
         },
         {
-            location: /\.css($|\?)/,
-            handler: [
-                autocss()
-            ]
-        },
-        {
-            location: /\.less($|\?)/,
-            handler: [
-                file(),
-                less()
-            ]
-        },
-        {
             location: /\.styl($|\?)/,
             handler: [
                 file(),
-                stylus()
+                stylus({
+                    'use': nib(),
+                    'resolve url': true,
+                    'resolve url nocheck': true
+                })
             ]
         },
         {
@@ -63,21 +49,19 @@ exports.getLocations = function () {
                 function (context) {
                     try {
                         context.content = babel
-                            .transform(
-                                context.content,
-                                {
-                                    compact: false,
-                                    ast: false,
-                                    presets: [
-                                        'es2015',
-                                        'react'
-                                    ],
-                                    plugins: [
-                                        'external-helpers-2',
-                                        'transform-object-rest-spread'
-                                    ]
+                            .transform(context.content, {
+                                compact: false,
+                                ast: false,
+                                presets: ['es2015', 'es2015-loose', 'react', 'stage-1'],
+                                plugins: [
+                                    'transform-es3-property-literals',
+                                    'transform-es3-member-expression-literals'
+                                ],
+                                moduleId: '',
+                                getModuleId: function (filename) {
+                                    return filename.replace('src/', '');
                                 }
-                            )
+                            })
                             .code;
                     }
                     catch (e) {
@@ -85,12 +69,16 @@ exports.getLocations = function () {
                         context.status = 500;
                     }
                 },
-                function amdify(context) {
-                    context.content =  ''
-                        + 'define(function (require, exports, module) {\n'
-                        +     context.content
-                        + '\n});';
-                }
+                amdify
+            ]
+        },
+        {
+            location: /\.(ttf|woff|eot|svg)($|\?)/,
+            handler: [
+                header({
+                    'Access-Control-Allow-Origin': '*'
+                }),
+                file()
             ]
         },
         {

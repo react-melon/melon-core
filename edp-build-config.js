@@ -6,9 +6,10 @@
 /* globals
     LessCompiler, CssCompressor, JsCompressor,
     PathMapper, AddCopyright, ModuleCompiler,
-    TplMerge, BabelProcessor,
-    AmdWrapper
+    TplMerge, BabelProcessor
 */
+
+'use strict';
 
 exports.input = __dirname;
 
@@ -19,86 +20,51 @@ exports.output = path.resolve(__dirname, 'output');
 // var pageEntries = 'html,htm,phtml,tpl,vm';
 
 exports.getProcessors = function () {
-    var lessProcessor = new LessCompiler();
-    var cssProcessor = new CssCompressor();
-    var moduleProcessor = new ModuleCompiler({
-        bizId: 'melon-core'
-    });
-    var jsProcessor = new JsCompressor();
+
     var pathMapperProcessor = new PathMapper();
     var addCopyright = new AddCopyright();
 
-    var amdWrapper = new AmdWrapper({
-        files: ['src/**/*.js']
-    });
-
-    var amdBabel = new BabelProcessor({
+    var babel = new BabelProcessor({
         files: ['src/**/*.js'],
         compileOptions: {
             compact: false,
             ast: false,
-            presets: [
-                'es2015',
-                'react'
-            ],
+            presets: ['es2015', 'es2015-loose', 'react', 'stage-1'],
             plugins: [
-                'external-helpers-2',
-                'transform-object-rest-spread'
-            ]
-        }
-    });
-
-    var commonjsBabel = new BabelProcessor({
-        files: ['src/**/*.js'],
-        compileOptions: {
-            compact: false,
-            ast: false,
-            presets: [
-                'react'
+                'external-helpers',
+                'transform-es2015-modules-umd',
+                'transform-es3-property-literals',
+                'transform-es3-member-expression-literals'
             ],
-            plugins: [
-                'external-helpers-2',
-                'transform-object-rest-spread',
-                'transform-es2015-destructuring',
-                'transform-es2015-block-scoped-functions',
-                'transform-es2015-block-scoping',
-                'transform-es2015-spread',
-                'transform-es2015-parameters'
-            ]
+            moduleId: '',
+            getModuleId: function (filename) {
+                return filename.replace('src/', '');
+            }
         }
     });
 
     return {
-        amd: [
-            amdBabel,
-            amdWrapper,
-            moduleProcessor,
-            pathMapperProcessor
-        ],
-        commonjs: [
-            commonjsBabel,
-            pathMapperProcessor
-        ],
-        release: [
-            lessProcessor, cssProcessor, moduleProcessor,
-            jsProcessor, pathMapperProcessor, addCopyright
+        'default': [
+            babel,
+            pathMapperProcessor,
+            addCopyright
         ]
     };
 };
 
 exports.exclude = [
+    '*.log',
     '*.md',
     'dist',
-    '*.html',
-    'lib',
     'README',
     '.*',
+    '*.json',
     'dep',
-    'bower.json',
     'example',
     'tool',
     'doc',
     'test',
+    'coverage',
     'module.conf',
     'node_modules',
     'dep/packages.manifest',
@@ -129,5 +95,4 @@ exports.injectProcessor = function (processors) {
         global[key] = processors[key];
     }
     global.BabelProcessor = require('./tool/BabelProcessor.js');
-    global.AmdWrapper = require('./tool/AmdWrapper.js');
 };
