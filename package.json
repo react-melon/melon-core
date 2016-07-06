@@ -1,6 +1,6 @@
 {
   "name": "melon-core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "React ui components base project",
   "main": "./src",
   "directories": {
