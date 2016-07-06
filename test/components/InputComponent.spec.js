@@ -101,7 +101,8 @@ describe('InputComponent', function () {
 
         }
 
-        const container = document.getElementById('app');
+        let container = document.createElement('div');
+        document.body.appendChild(container);
 
         render(
             <Form><InputComponetTest value={1} /></Form>,
@@ -110,6 +111,8 @@ describe('InputComponent', function () {
                 expect(attachFormSpy).toHaveBeenCalled();
                 unmountComponentAtNode(container);
                 expect(detachFormSpy).toHaveBeenCalled();
+                document.body.removeChild(container);
+                container = null;
             }
         );
 
