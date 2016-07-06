@@ -35,9 +35,7 @@
     "karma-mocha-reporter": "^2.0.4",
     "karma-phantomjs-launcher": "^1.0.1",
     "melon": "^0.3.1",
-    "mime": "^1.3.4",
     "mocha": "^2.5.3",
-    "moment": "^2.13.0",
     "nib": "^1.1.0",
     "react-addons-test-utils": "^0.14.8",
     "stylus": "^0.54.5",
@@ -53,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jinzhubaofu/melon.git"
+    "url": "git+https://github.com/react-melon/melon-core.git"
   },
   "peerDependencies": {
     "react": ">=0.14"
