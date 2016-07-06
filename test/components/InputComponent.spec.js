@@ -9,13 +9,16 @@ import expect from 'expect';
 import expectJSX from 'expect-jsx';
 import {createRenderer, renderIntoDocument, findRenderedComponentWithType} from 'react-addons-test-utils';
 
+import {create} from '../../src/classname/cxBuilder';
 import InputComponent from '../../src/InputComponent';
 
 import then from '../then';
 
+const cx = create('InputComponentTest');
+
 expect.extend(expectJSX);
 
-class InputComponetTest extends InputComponent {
+class InputComponentTest extends InputComponent {
 
     change(value) {
         super.onChange({
@@ -27,7 +30,8 @@ class InputComponetTest extends InputComponent {
 
     render() {
         const value = this.state.value;
-        return (<div>{value}</div>);
+        const className = cx(this.props).addStates(this.getStyleStates()).build();
+        return (<div className={className}>{value}</div>);
     }
 
 }
@@ -40,12 +44,28 @@ describe('InputComponent', function () {
         const renderer = createRenderer();
 
         renderer.render(
-            <InputComponetTest value={1}/>
+            <InputComponentTest value={1}/>
         );
 
         const actualElement = renderer.getRenderOutput();
 
-        const expectedElement = (<div>1</div>);
+        const expectedElement = (<div className="ui-input-component-test">1</div>);
+
+        expect(actualElement).toEqualJSX(expectedElement);
+
+    });
+
+    it('disable readOnly className', function () {
+
+        const renderer = createRenderer();
+
+        renderer.render(
+            <InputComponentTest value={1} disabled readOnly/>
+        );
+
+        const actualElement = renderer.getRenderOutput();
+
+        const expectedElement = (<div className="ui-input-component-test state-disabled state-read-only">1</div>);
 
         expect(actualElement).toEqualJSX(expectedElement);
 
@@ -55,7 +75,7 @@ describe('InputComponent', function () {
 
         const renderer = createRenderer();
 
-        class InputComponetTest extends InputComponent {
+        class InputComponentTest extends InputComponent {
 
             render() {
                 const value = this.state.value;
@@ -65,7 +85,7 @@ describe('InputComponent', function () {
         }
 
         renderer.render(
-            <InputComponetTest defaultValue={1}/>
+            <InputComponentTest defaultValue={1}/>
         );
 
         const actualElement = renderer.getRenderOutput();
@@ -102,7 +122,7 @@ describe('InputComponent', function () {
         };
 
 
-        class InputComponetTest extends InputComponent {
+        class InputComponentTest extends InputComponent {
 
             render() {
                 const value = this.state.value;
@@ -115,7 +135,7 @@ describe('InputComponent', function () {
         document.body.appendChild(container);
 
         render(
-            <Form><InputComponetTest value={1} /></Form>,
+            <Form><InputComponentTest value={1} /></Form>,
             container,
             function () {
                 expect(attachFormSpy).toHaveBeenCalled();
@@ -147,7 +167,7 @@ describe('InputComponent', function () {
 
             render() {
                 return (
-                    <InputComponetTest
+                    <InputComponentTest
                         value={this.state.value}
                         onChange={this.onChange} />
                 );
@@ -155,7 +175,95 @@ describe('InputComponent', function () {
         }
 
         const component = renderIntoDocument(<TestComponent />);
-        const input = findRenderedComponentWithType(component, InputComponetTest);
+        const input = findRenderedComponentWithType(component, InputComponentTest);
+
+        expect(input.getValue()).toBe('');
+
+        input.change('123');
+
+        then(() => {
+            expect(input.getValue()).toBe('123');
+            expect(changeSpy).toHaveBeenCalled();
+            input.change('123');
+        })
+        .then(() => {
+            expect(input.getValue()).toBe('123');
+            done();
+        });
+
+    });
+
+    it('validate', function (done) {
+
+        class TestComponent extends Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {value: ''};
+            }
+
+            render() {
+                return (
+                    <InputComponentTest
+                        rules={{
+                            required: true,
+                            requiredErrorMessage: 'test'
+                        }}
+                        value={this.state.value}  />
+                );
+            }
+        }
+
+        const component = renderIntoDocument(<TestComponent />);
+        const input = findRenderedComponentWithType(component, InputComponentTest);
+
+        component.setState({value: null});
+
+        then(() => {
+            expect(input.getValue()).toBe(null);
+            expect(input.state.validity.isValid()).toBe(false);
+            expect(input.state.validity.getMessage()).toBe('test');
+            component.setState({value: '22'});
+        })
+        .then(() => {
+            expect(input.state.validity.isValid()).toBe(true);
+            input.change(undefined);
+        })
+        .then(() => {
+            expect(input.state.validity.isValid()).toBe(false);
+            expect(input.validate().isValid()).toBe(false);
+            done();
+        });
+
+    });
+
+    it('controled', function (done) {
+
+        const changeSpy = expect.createSpy();
+
+        class TestComponent extends Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {value: undefined};
+                this.onChange = this.onChange.bind(this);
+            }
+
+            onChange({value}) {
+                this.setState({value}, changeSpy);
+            }
+
+            render() {
+                return (
+                    <InputComponentTest
+                        value={this.state.value}
+                        onChange={this.onChange} />
+                );
+            }
+        }
+
+        const component = renderIntoDocument(<TestComponent />);
+        const input = findRenderedComponentWithType(component, InputComponentTest);
 
         expect(input.getValue()).toBe('');
 
