@@ -64,16 +64,11 @@
         var states = props.states;
         var hidden = props.hidden;
         var disabled = props.disabled;
-        var validity = props.validity;
 
-
-        var isValid = validity ? validity.isValid() : null;
 
         return babelHelpers['extends']({}, states, {
             hidden: hidden,
-            disabled: disabled,
-            invalid: isValid === false,
-            valid: isValid === true
+            disabled: disabled
         });
     }
 
@@ -117,7 +112,7 @@
             }
 
             function removeStates(name) {
-                states[name] = true;
+                states[name] = false;
                 return builder;
             }
 

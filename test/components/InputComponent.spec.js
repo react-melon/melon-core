@@ -257,6 +257,7 @@ describe('InputComponent', function () {
                 return (
                     <InputComponentTest
                         value={this.state.value}
+                        disabled={true}
                         onChange={this.onChange} />
                 );
             }
