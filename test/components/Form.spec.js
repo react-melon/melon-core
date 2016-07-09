@@ -11,10 +11,31 @@ import TestUtils from 'react-addons-test-utils';
 
 import Form from '../../src/Form';
 import Button from 'melon/Button';
-import TextBox from 'melon/TextBox';
 import validator from '../../src/Validator';
+import InputComponent from '../../src/InputComponent';
 
 expect.extend(expectJSX);
+
+class InputComponentTest extends InputComponent {
+
+    change(value) {
+        super.onChange({
+            value,
+            type: 'change',
+            target: this
+        });
+    }
+
+    render() {
+        const value = this.state.value;
+        return (<div>{value}</div>);
+    }
+
+}
+
+InputComponentTest.contextTypes = InputComponent.contextTypes;
+InputComponentTest.childContextTypes = InputComponent.childContextTypes;
+
 
 describe('Form', () => {
 
@@ -63,17 +84,17 @@ describe('Form', () => {
 
                 return (
                     <Form ref="form" onSubmit={spy}>
-                        <TextBox
+                        <InputComponentTest
                             name="textbox1"
                             defaultValue="1"
                             rules={{required: true}} />
                         {this.state.showText2 ? (
-                            <TextBox
+                            <InputComponentTest
                                 name="textbox2"
                                 defaultValue=""
                                 rules={{required: true, requiredErrorMessage: 'test'}} />
                         ) : null}
-                        <TextBox
+                        <InputComponentTest
                             name="textbox3"
                             defaultValue="3"
                             disabled={true}

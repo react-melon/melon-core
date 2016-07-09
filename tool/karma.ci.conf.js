@@ -13,14 +13,12 @@ var customLaunchers = {
     slChrome: {
         base: 'SauceLabs',
         browserName: 'chrome',
-        version: '48',
-        platform: 'Windows 7'
+        version: '48'
     },
     slFirefox: {
         base: 'SauceLabs',
         browserName: 'firefox',
-        version: '45',
-        platform: 'Windows 10'
+        version: '45'
     },
     slIE11: {
         base: 'SauceLabs',
@@ -33,6 +31,11 @@ var customLaunchers = {
         browserName: 'internet explorer',
         platform: 'Windows 8',
         version: '10'
+    },
+    slIE9: {
+        base: 'SauceLabs',
+        browserName: 'internet explorer',
+        version: '9'
     }
 };
 
@@ -45,6 +48,7 @@ module.exports = function (config) {
     }
 
     config.set(_.extend(karmaConfig, {
+        frameworks: ['browserify', 'mocha', 'es5-shim'],
         sauceLabs: {
             'testName': 'Web App Unit Tests',
             'public': 'public'

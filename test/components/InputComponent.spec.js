@@ -38,6 +38,8 @@ class InputComponentTest extends InputComponent {
 
 InputComponentTest.contextTypes = InputComponent.contextTypes;
 InputComponentTest.childContextTypes = InputComponent.childContextTypes;
+InputComponentTest.defaultProps = InputComponent.defaultProps;
+InputComponentTest.propTypes = InputComponent.propTypes;
 
 describe('InputComponent', function () {
 
@@ -77,22 +79,13 @@ describe('InputComponent', function () {
 
         const renderer = createRenderer();
 
-        class InputComponentTest extends InputComponent {
-
-            render() {
-                const value = this.state.value;
-                return (<div>{value}</div>);
-            }
-
-        }
-
         renderer.render(
             <InputComponentTest defaultValue={1}/>
         );
 
         const actualElement = renderer.getRenderOutput();
 
-        const expectedElement = (<div>1</div>);
+        const expectedElement = (<div className="ui-input-component-test">1</div>);
 
         expect(actualElement).toEqualJSX(expectedElement);
 
@@ -123,16 +116,6 @@ describe('InputComponent', function () {
             detachForm: PropTypes.func
         };
 
-
-        class InputComponentTest extends InputComponent {
-
-            render() {
-                const value = this.state.value;
-                return (<div>{value}</div>);
-            }
-
-        }
-
         let container = document.createElement('div');
         document.body.appendChild(container);
 
@@ -159,7 +142,7 @@ describe('InputComponent', function () {
 
             constructor(props) {
                 super(props);
-                this.state = {value: undefined};
+                this.state = {};
                 this.onChange = this.onChange.bind(this);
             }
 
@@ -234,51 +217,6 @@ describe('InputComponent', function () {
         .then(() => {
             expect(input.state.validity.isValid()).toBe(false);
             expect(input.validate().isValid()).toBe(false);
-            done();
-        });
-
-    });
-
-    it('controled', function (done) {
-
-        const changeSpy = expect.createSpy();
-
-        class TestComponent extends Component {
-
-            constructor(props) {
-                super(props);
-                this.state = {value: undefined};
-                this.onChange = this.onChange.bind(this);
-            }
-
-            onChange({value}) {
-                this.setState({value}, changeSpy);
-            }
-
-            render() {
-                return (
-                    <InputComponentTest
-                        value={this.state.value}
-                        disabled={true}
-                        onChange={this.onChange} />
-                );
-            }
-        }
-
-        const component = renderIntoDocument(<TestComponent />);
-        const input = findRenderedComponentWithType(component, InputComponentTest);
-
-        expect(input.getValue()).toBe('');
-
-        input.change('123');
-
-        then(() => {
-            expect(input.getValue()).toBe('123');
-            expect(changeSpy).toHaveBeenCalled();
-            input.change('123');
-        })
-        .then(() => {
-            expect(input.getValue()).toBe('123');
             done();
         });
 
