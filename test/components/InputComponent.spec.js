@@ -36,6 +36,8 @@ class InputComponentTest extends InputComponent {
 
 }
 
+InputComponentTest.contextTypes = InputComponent.contextTypes;
+InputComponentTest.childContextTypes = InputComponent.childContextTypes;
 
 describe('InputComponent', function () {
 
