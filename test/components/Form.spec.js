@@ -10,7 +10,6 @@ import expectJSX from 'expect-jsx';
 import TestUtils from 'react-addons-test-utils';
 
 import Form from '../../src/Form';
-import Button from 'melon/Button';
 import validator from '../../src/Validator';
 import InputComponent from '../../src/InputComponent';
 
@@ -99,7 +98,7 @@ describe('Form', () => {
                             defaultValue="3"
                             disabled={true}
                             rules={{required: true}} />
-                        <Button type="submit">submit</Button>
+                        <button type="submit">submit</button>
                     </Form>
                 );
             }
