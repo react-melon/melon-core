@@ -36,6 +36,17 @@ var customLaunchers = {
         base: 'SauceLabs',
         browserName: 'internet explorer',
         version: '9'
+    },
+    slIOSSafari: {
+        base: 'SauceLabs',
+        browserName: 'iphone',
+        platform: 'OS X 10.9',
+        version: '7.1'
+    },
+    slAndroid: {
+        base: 'SauceLabs',
+        platform: 'Android 4.3',
+        browserName: 'android'
     }
 };
 
