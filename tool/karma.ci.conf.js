@@ -44,17 +44,14 @@ var customLaunchers = {
     },
     slIOS: {
         base: 'SauceLabs',
-        browserName: '',
+        browserName: 'iphone',
         deviceName: ' iPhone 6',
-        platformVersion: '9.1',
-        platformName: 'iOS'
+        platform: 'iOS 9.1'
     },
     slAndroid: {
         base: 'SauceLabs',
-        browserName: '',
-        version: '4.3',
-        platformVersion: '4.3',
-        platformName: 'Android'
+        browserName: 'android',
+        platform: 'Android 4.3'
     }
 };
 
