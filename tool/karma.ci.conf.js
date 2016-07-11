@@ -10,15 +10,15 @@ var _ = require('lodash');
 var karmaConfig = require('./karma/config');
 
 var customLaunchers = {
+    // pc
     slChrome: {
         base: 'SauceLabs',
         browserName: 'chrome',
-        version: '48'
+        platform: 'Windows 7'
     },
     slFirefox: {
         base: 'SauceLabs',
-        browserName: 'firefox',
-        version: '45'
+        browserName: 'firefox'
     },
     slIE11: {
         base: 'SauceLabs',
@@ -37,21 +37,23 @@ var customLaunchers = {
         browserName: 'internet explorer',
         version: '9'
     },
-    slEdge: {
+    slMacSafari: {
         base: 'SauceLabs',
-        platform: 'Windows 10',
-        browserName: 'microsoftedge'
+        browserName: 'safari',
+        platform: 'OS X 10.10'
     },
-    slIOS: {
+    // mobile
+    slIosSafari: {
         base: 'SauceLabs',
         browserName: 'iphone',
-        deviceName: ' iPhone 6',
-        platform: 'iOS 9.1'
+        platform: 'OS X 10.9',
+        version: '9.1'
     },
     slAndroid: {
         base: 'SauceLabs',
         browserName: 'android',
-        platform: 'Android 4.3'
+        platform: 'Linux',
+        version: '4.3'
     }
 };
 
@@ -66,7 +68,7 @@ module.exports = function (config) {
     config.set(_.extend(karmaConfig, {
         frameworks: ['browserify', 'mocha', 'es5-shim'],
         sauceLabs: {
-            'testName': 'Web App Unit Tests',
+            'testName': 'Melon Core Unit Tests',
             'public': 'public'
         },
         customLaunchers: customLaunchers,
