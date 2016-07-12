@@ -25,7 +25,7 @@ module.exports = {
     frameworks: ['browserify', 'jasmine'],
 
     files: [
-        './node_modules/jasmine-expect-jsx/dist/jasmine-expect-jsx.js',
+        './node_modules/jasmine-expect-jsx/dist/jasmine-expect-jsx.js', // expect-jsx
         './test/**/*.spec.js'
     ],
 
