@@ -8,7 +8,6 @@
 import React, {Component} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import * as separatePopupHelper from '../../../src/util/separatePopupHelper';
-import expect from 'expect';
 
 
 class TestComponent extends Component {
