@@ -47,8 +47,8 @@ describe('separatePopupHelper', function () {
     it('work', function (done) {
 
         render(<TestComponent />, container, function () {
-            expect(document.querySelector('.ui-test-component-popup')).toNotEqual(null);
-            expect(document.querySelector('#test')).toNotEqual(null);
+            expect(document.querySelector('.ui-test-component-popup')).not.toEqual(null);
+            expect(document.querySelector('#test')).not.toEqual(null);
 
             unmountComponentAtNode(container);
             expect(document.querySelector('.ui-test-component-popup')).toEqual(null);
