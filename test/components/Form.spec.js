@@ -5,15 +5,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import expect from 'expect';
-import expectJSX from 'expect-jsx';
 import TestUtils from 'react-addons-test-utils';
 
 import Form from '../../src/Form';
 import validator from '../../src/Validator';
 import InputComponent from '../../src/InputComponent';
-
-expect.extend(expectJSX);
 
 class InputComponentTest extends InputComponent {
 
@@ -66,7 +62,7 @@ describe('Form', () => {
     it('functions', done => {
 
         let component;
-        let spy = expect.createSpy();
+        let spy = jasmine.createSpy();
 
         const TestComponent = React.createClass({
 
@@ -123,7 +119,7 @@ describe('Form', () => {
             const node = document.getElementsByTagName('form')[0];
             TestUtils.Simulate.submit(node);
 
-            expect(spy.calls.length).toEqual(0);
+            expect(spy.calls.count()).toEqual(0);
 
             component.setState({showText2: false}, () => {
                 expect(form.fields.length).toBe(2);
@@ -135,7 +131,7 @@ describe('Form', () => {
 
                 TestUtils.Simulate.submit(node);
 
-                expect(spy.calls.length).toEqual(1);
+                expect(spy.calls.count()).toEqual(1);
                 done();
             });
 

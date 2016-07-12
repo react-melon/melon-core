@@ -19,22 +19,26 @@ var babelOpts = {
 
 
 module.exports = {
+
     basePath: path.join(__dirname, '../../'),
-    frameworks: ['browserify', 'mocha'],
+
+    frameworks: ['browserify', 'jasmine'],
+
     files: [
-        './test/components/*.spec.js',
-        './test/components/**/*.spec.js'
+        './node_modules/jasmine-expect-jsx/dist/jasmine-expect-jsx.js',
+        './test/**/*.spec.js'
     ],
+
     browsers: ['Chrome'],
+
     preprocessors: {
-        './test/components/*.spec.js': ['browserify'],
-        './test/components/**/*.spec.js': ['browserify'],
+        './test/**/*.spec.js': ['browserify'],
         './src/*.js': ['browserify', 'coverage']
     },
 
     browserify: {
         debug: true,
-        paths: ['./src/*.js', './test/components/**.spec.js'],
+        paths: ['./src/*.js', './test/**/**.spec.js'],
 
         transform: [
 
@@ -53,7 +57,7 @@ module.exports = {
         extensions: ['.js']
     },
     // logLevel: config.LOG_DEBUG,
-    reporters: ['progress', 'coverage', 'mocha', 'dots'],
+    reporters: ['coverage', 'mocha'],
     coverageReporter: {
         dir: path.join(__dirname, '../../coverage'),
         reporters: [

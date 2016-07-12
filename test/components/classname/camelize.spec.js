@@ -7,7 +7,6 @@
 
 
 import camelize from '../../../src/classname/camelize';
-import expect from 'expect';
 
 describe('camelize', function () {
 

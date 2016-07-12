@@ -7,7 +7,6 @@
 
 import {create} from '../../../src/classname/cxBuilder';
 import pascalize from '../../../src/classname/pascalize';
-import expect from 'expect';
 
 describe('cxBuilder', function () {
 

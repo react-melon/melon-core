@@ -5,8 +5,6 @@
 
 import React, {Component, PropTypes} from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
-import expect from 'expect';
-import expectJSX from 'expect-jsx';
 import {createRenderer, renderIntoDocument, findRenderedComponentWithType} from 'react-addons-test-utils';
 
 import {create} from '../../src/classname/cxBuilder';
@@ -15,8 +13,6 @@ import InputComponent from '../../src/InputComponent';
 import then from '../then';
 
 const cx = create('InputComponentTest');
-
-expect.extend(expectJSX);
 
 class InputComponentTest extends InputComponent {
 
@@ -93,8 +89,8 @@ describe('InputComponent', function () {
 
     it('should try to attach/detach to a form', function () {
 
-        const attachFormSpy = expect.createSpy();
-        const detachFormSpy = expect.createSpy();
+        const attachFormSpy = jasmine.createSpy('attach');
+        const detachFormSpy = jasmine.createSpy('detach');
 
         class Form extends Component {
 
@@ -123,6 +119,7 @@ describe('InputComponent', function () {
             <Form><InputComponentTest value={1} /></Form>,
             container,
             function () {
+                console.log(attachFormSpy.calls.count());
                 expect(attachFormSpy).toHaveBeenCalled();
                 unmountComponentAtNode(container);
                 expect(detachFormSpy).toHaveBeenCalled();
@@ -136,7 +133,7 @@ describe('InputComponent', function () {
 
     it('controled', function (done) {
 
-        const changeSpy = expect.createSpy();
+        const changeSpy = jasmine.createSpy();
 
         class TestComponent extends Component {
 

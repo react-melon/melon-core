@@ -66,7 +66,7 @@ module.exports = function (config) {
     }
 
     config.set(_.extend(karmaConfig, {
-        frameworks: ['browserify', 'mocha', 'es5-shim'],
+        frameworks: ['browserify', 'mocha'],
         sauceLabs: {
             'testName': 'Melon Core Unit Tests',
             'public': 'public'
