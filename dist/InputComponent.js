@@ -99,7 +99,7 @@
         };
 
         InputComponent.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
-            return !(0, _shallowEqual2['default'])(this.props, nextProps) || (0, _shallowEqual2['default'])(this.state, nextState);
+            return !(0, _shallowEqual2['default'])(this.props, nextProps) || !(0, _shallowEqual2['default'])(this.state, nextState);
         };
 
         InputComponent.prototype.getSyncUpdates = function getSyncUpdates(nextProps) {

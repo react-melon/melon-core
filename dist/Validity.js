@@ -1,27 +1,28 @@
 /*! 2016 Baidu Inc. All Rights Reserved */
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', 'react', './classname/cxBuilder', './validator/Validity', "./babelHelpers"], factory);
+        define(['exports', 'react', './classname/cxBuilder', './validator/Validity', './util/shallowEqual', "./babelHelpers"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('react'), require('./classname/cxBuilder'), require('./validator/Validity'), require("./babelHelpers"));
+        factory(exports, require('react'), require('./classname/cxBuilder'), require('./validator/Validity'), require('./util/shallowEqual'), require("./babelHelpers"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.react, global.cxBuilder, global.Validity, global.babelHelpers);
+        factory(mod.exports, global.react, global.cxBuilder, global.Validity, global.shallowEqual, global.babelHelpers);
         global.Validity = mod.exports;
     }
-})(this, function (exports, _react, _cxBuilder, _Validity, babelHelpers) {
+})(this, function (exports, _react, _cxBuilder, _Validity, _shallowEqual, babelHelpers) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
-    exports.default = Validity;
 
     var _react2 = babelHelpers.interopRequireDefault(_react);
 
     var _Validity2 = babelHelpers.interopRequireDefault(_Validity);
+
+    var _shallowEqual2 = babelHelpers.interopRequireDefault(_shallowEqual);
 
     /**
      * @file melon/Validity
@@ -30,25 +31,41 @@
 
     var cx = (0, _cxBuilder.create)('Validity');
 
-    /* eslint-disable fecs-prefer-class */
-    function Validity(props) {
+    var Validity = function (_Component) {
+        babelHelpers.inherits(Validity, _Component);
 
-        var validity = props.validity;
+        function Validity() {
+            babelHelpers.classCallCheck(this, Validity);
+            return babelHelpers.possibleConstructorReturn(this, _Component.apply(this, arguments));
+        }
 
-        var isValid = validity ? validity.isValid() : true;
-        var message = validity ? validity.getMessage() : null;
+        Validity.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
+            return !(0, _shallowEqual2['default'])(this.props, nextProps);
+        };
 
-        var statefulClassName = cx(props).addStates({
-            valid: isValid,
-            invalid: !isValid
-        }).build();
+        Validity.prototype.render = function render() {
+            var validity = this.props.validity;
 
-        return _react2['default'].createElement(
-            'div',
-            { className: statefulClassName },
-            message
-        );
-    }
+            var isValid = validity ? validity.isValid() : true;
+            var message = validity ? validity.getMessage() : null;
+
+            var statefulClassName = cx(this.props).addStates({
+                valid: isValid,
+                invalid: !isValid
+            }).build();
+
+            return _react2['default'].createElement(
+                'div',
+                { className: statefulClassName },
+                message
+            );
+        };
+
+        return Validity;
+    }(_react.Component);
+
+    exports['default'] = Validity;
+
 
     Validity.displayName = 'Validity';
 

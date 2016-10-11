@@ -35,7 +35,8 @@
     }
 
     /**
-     * const builder = require('classnames').create('textbox');
+     * import {create} from 'cxBuilder';
+     * const builder = create('textbox');
      *
      * builder()
      *   .part('hehe')
