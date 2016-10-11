@@ -3,33 +3,38 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {PropTypes} from 'react';
+import React, {PropTypes, Component} from 'react';
 import {create} from './classname/cxBuilder';
 import V from './validator/Validity';
+import shallowEqual from './util/shallowEqual';
 
 const cx = create('Validity');
 
-/* eslint-disable fecs-prefer-class */
-export default function Validity(props) {
+export default class Validity extends Component {
 
-    const validity = props.validity;
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowEqual(this.props, nextProps);
+    }
 
-    const isValid = validity ? validity.isValid() : true;
-    const message = validity ? validity.getMessage() : null;
+    render() {
+        const validity = this.props.validity;
 
-    const statefulClassName = cx(props)
-        .addStates({
-            valid: isValid,
-            invalid: !isValid
-        })
-        .build();
+        const isValid = validity ? validity.isValid() : true;
+        const message = validity ? validity.getMessage() : null;
 
-    return (
-        <div className={statefulClassName}>
-            {message}
-        </div>
-    );
+        const statefulClassName = cx(this.props)
+            .addStates({
+                valid: isValid,
+                invalid: !isValid
+            })
+            .build();
 
+        return (
+            <div className={statefulClassName}>
+                {message}
+            </div>
+        );
+    }
 }
 
 Validity.displayName = 'Validity';
