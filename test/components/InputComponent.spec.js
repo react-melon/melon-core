@@ -116,4 +116,38 @@ describe('InputComponent', function () {
 
     });
 
+    it('`pure-render`', function () {
+
+        const renderer = createRenderer();
+
+        let renderAmount = 0;
+
+        class InputComponetTest extends InputComponent {
+
+            render() {
+                renderAmount++;
+                const value = this.state.value;
+                return (<div>{value}</div>);
+            }
+
+        }
+
+        renderer.render(
+            <InputComponetTest value={1} />
+        );
+
+        renderer.render(
+            <InputComponetTest value={1} />
+        );
+
+        expect(renderAmount).toBe(1);
+
+        renderer.render(
+            <InputComponetTest value={2} />
+        );
+
+        expect(renderAmount).toBe(2);
+
+    });
+
 });

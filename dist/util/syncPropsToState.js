@@ -83,8 +83,14 @@
         var customValidity = nextProps.customValidity;
 
         var validity = getNextValidity(component, {
-            value: value, customValidity: customValidity, disabled: disabled
+            value: value,
+            customValidity: customValidity,
+            disabled: disabled
         });
+
+        if (value === component.state.value && validity === component.state.validity) {
+            return null;
+        }
 
         return { value: value, validity: validity };
     }

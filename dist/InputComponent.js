@@ -1,17 +1,17 @@
 /*! 2016 Baidu Inc. All Rights Reserved */
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', 'react', './Validator', './util/syncPropsToState', "./babelHelpers"], factory);
+        define(['exports', 'react', './Validator', './util/syncPropsToState', './util/shallowEqual', "./babelHelpers"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('react'), require('./Validator'), require('./util/syncPropsToState'), require("./babelHelpers"));
+        factory(exports, require('react'), require('./Validator'), require('./util/syncPropsToState'), require('./util/shallowEqual'), require("./babelHelpers"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.react, global.Validator, global.syncPropsToState, global.babelHelpers);
+        factory(mod.exports, global.react, global.Validator, global.syncPropsToState, global.shallowEqual, global.babelHelpers);
         global.InputComponent = mod.exports;
     }
-})(this, function (exports, _react, _Validator, _syncPropsToState, babelHelpers) {
+})(this, function (exports, _react, _Validator, _syncPropsToState, _shallowEqual, babelHelpers) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -22,11 +22,13 @@
 
     var _syncPropsToState2 = babelHelpers.interopRequireDefault(_syncPropsToState);
 
+    var _shallowEqual2 = babelHelpers.interopRequireDefault(_shallowEqual);
+
     var InputComponent = function (_Component) {
         babelHelpers.inherits(InputComponent, _Component);
 
         function InputComponent(props) {
-            var context = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+            var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
             babelHelpers.classCallCheck(this, InputComponent);
 
             var _this = babelHelpers.possibleConstructorReturn(this, _Component.call(this, props));
@@ -94,6 +96,10 @@
             if (updates) {
                 this.setState(updates);
             }
+        };
+
+        InputComponent.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
+            return !(0, _shallowEqual2['default'])(this.props, nextProps) || (0, _shallowEqual2['default'])(this.state, nextState);
         };
 
         InputComponent.prototype.getSyncUpdates = function getSyncUpdates(nextProps) {

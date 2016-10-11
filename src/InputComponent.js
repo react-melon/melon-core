@@ -8,7 +8,7 @@
 import {Component, PropTypes} from 'react';
 import defaultValidator from './Validator';
 import getUpdates from './util/syncPropsToState';
-
+import shallowEqual from './util/shallowEqual';
 
 export default class InputComponent extends Component {
 
@@ -105,6 +105,24 @@ export default class InputComponent extends Component {
 
     }
 
+    /**
+     * 是否应当更新组件
+     *
+     * @param {*} nextProps 下一个属性
+     * @param {*} nextState 下一个状态
+     * @return {boolean}
+     */
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowEqual(this.props, nextProps)
+            || !shallowEqual(this.state, nextState);
+    }
+
+    /**
+     * 获取 props => state 更新 pathc
+     *
+     * @param {*} nextProps 下一个属性
+     * @return {Object}
+     */
     getSyncUpdates(nextProps) {
         return getUpdates(this, nextProps);
     }

@@ -1,27 +1,23 @@
 /*! 2016 Baidu Inc. All Rights Reserved */
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', './classname', './hyphenate', './pascalize', '../config', "../babelHelpers"], factory);
+        define(['exports', './classname', '../util/string', '../config', "../babelHelpers"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('./classname'), require('./hyphenate'), require('./pascalize'), require('../config'), require("../babelHelpers"));
+        factory(exports, require('./classname'), require('../util/string'), require('../config'), require("../babelHelpers"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.classname, global.hyphenate, global.pascalize, global.config, global.babelHelpers);
+        factory(mod.exports, global.classname, global.string, global.config, global.babelHelpers);
         global.cxBuilder = mod.exports;
     }
-})(this, function (exports, _classname, _hyphenate, _pascalize, _config, babelHelpers) {
+})(this, function (exports, _classname, _string, _config, babelHelpers) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
     exports.create = create;
-
-    var _hyphenate2 = babelHelpers.interopRequireDefault(_hyphenate);
-
-    var _pascalize2 = babelHelpers.interopRequireDefault(_pascalize);
 
     /**
      * @file melon/classname
@@ -79,8 +75,8 @@
 
     function create(type) {
 
-        var displayName = (0, _pascalize2['default'])(type);
-        var hyphenatedClassName = (0, _hyphenate2['default'])(displayName);
+        var displayName = (0, _string.pascalize)(type);
+        var hyphenatedClassName = (0, _string.hyphenate)(displayName);
         var getVariantClassName = addPrefix(_config.COMPONENT_VARIANT_PREFIX);
         var getStateClassName = addPrefix(_config.COMPONENT_STATE_PREFIX);
 
@@ -155,7 +151,7 @@
         }
 
         function builder() {
-            var props = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             return createBuilder(props);
         }

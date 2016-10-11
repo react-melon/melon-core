@@ -5,8 +5,7 @@
 
 import {createClasses, createClassName} from './classname';
 
-import hyphenate from './hyphenate';
-import pascalize from './pascalize';
+import {hyphenate, pascalize} from '../util/string';
 
 import {
     COMPONENT_CLASS_PREFIX,
@@ -30,7 +29,8 @@ function addPrefix(prefix) {
 }
 
 /**
- * const builder = require('classnames').create('textbox');
+ * import {create} from 'cxBuilder';
+ * const builder = create('textbox');
  *
  * builder()
  *   .part('hehe')

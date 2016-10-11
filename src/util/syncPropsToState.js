@@ -55,8 +55,14 @@ export default function getSyncUpdates(component, nextProps) {
     const value = getNextValue(component, nextProps);
     const {disabled, customValidity} = nextProps;
     const validity = getNextValidity(component, {
-        value, customValidity, disabled
+        value,
+        customValidity,
+        disabled
     });
+
+    if (value === component.state.value && validity === component.state.validity) {
+        return null;
+    }
 
     return {value, validity};
 

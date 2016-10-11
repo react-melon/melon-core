@@ -28,7 +28,7 @@
     */
 
     function range(start, stop) {
-        var step = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
+        var step = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
 
         /* eslint-disable prefer-rest-params */
