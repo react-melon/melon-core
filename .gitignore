@@ -30,3 +30,7 @@ dep
 
 # npm output directory
 lib
+
+# mac osx
+.DS_Store
+._.DS_Store

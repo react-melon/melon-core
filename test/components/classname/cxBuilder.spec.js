@@ -6,7 +6,7 @@
 */
 
 import {create} from '../../../src/classname/cxBuilder';
-import expect from 'expect';
+import {pascalize} from '../../../src/util/string';
 
 describe('cxBuilder', function () {
 
@@ -56,6 +56,40 @@ describe('cxBuilder', function () {
             cx({disabled: true, hidden: true, states: {a: 1, b: 0}}).build()
         ).toEqual('ui-button state-a state-hidden state-disabled');
 
+    });
+
+    it('size', function () {
+
+        const cx = create('Button');
+
+        expect(
+            cx({size: 'xxl'}).build()
+        ).toEqual('ui-button variant-size-xxl');
+
+    });
+
+    it('part', function () {
+
+        const cx = create('Button');
+
+        expect(cx().part('haha').build()).toEqual('ui-button-haha');
+
+    });
+
+    it('remove', function () {
+        const cx = create('Button');
+        expect(cx({variants: ['haha', 'hehe']}).removeVariants('haha').build()).toEqual('ui-button variant-hehe');
+        expect(cx({states: {haha: true}}).removeStates('haha').build()).toEqual('ui-button');
+    });
+
+    it('clear', function () {
+        const cx = create('Button');
+        expect(cx({variants: ['haha', 'hehe']}).clearVariants().build()).toEqual('ui-button');
+        expect(cx({states: {haha: true}}).clearStates('haha').build()).toEqual('ui-button');
+    });
+
+    it('pascalize', function () {
+        expect(pascalize()).toBe('');
     });
 
 });
