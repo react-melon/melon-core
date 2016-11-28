@@ -49,17 +49,9 @@ export default class Form extends Component {
     }
 
     isValidFormField(field) {
-
         const value = field.getValue();
-        const {pointer, props} = field;
-        const {name, disabled} = props;
-
-        return name
-            && !disabled
-            && value != null
-            && pointer
-            && pointer.lastIndexOf('/') === 0;
-
+        const {name, disabled} = field.props;
+        return name && !disabled && value != null;
     }
 
     getData() {
@@ -84,6 +76,8 @@ export default class Form extends Component {
 
     checkValidity() {
 
+        const validator = this.props.validator;
+
         return this
             .fields
             .reduce((formValidity, field) => {
@@ -94,7 +88,7 @@ export default class Form extends Component {
                 }
 
                 const value = field.getValue();
-                const validity = field.validate(value);
+                const validity = validator.validate(value, field);
 
                 return {
                     isValid: formValidity.isValid && validity.isValid(),
@@ -115,6 +109,9 @@ export default class Form extends Component {
         const {
             noValidate,
             onSubmit,
+            /* eslint-disable no-unused-vars */
+            validator,
+            /* eslint-enable no-unused-vars */
             ...rest
         } = this.props;
 

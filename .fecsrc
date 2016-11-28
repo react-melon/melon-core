@@ -1,5 +1,8 @@
 {
     "eslint": {
+        "env": {
+            "es6": -1
+        },
         "rules": {
             "fecs-prefer-destructure": ["off", "always"],
             "fecs-use-for-of": ["off", "always"],

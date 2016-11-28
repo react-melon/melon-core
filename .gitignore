@@ -28,8 +28,8 @@ dep
 # Optional REPL history
 .node_repl_history
 
-# npm output directory
-lib
+# webpack temp
+asset
 
 # mac osx
 .DS_Store

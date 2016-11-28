@@ -3,5 +3,4 @@ dep
 dist
 src
 test
-edp-*.js
 example
