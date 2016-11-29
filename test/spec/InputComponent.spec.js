@@ -43,7 +43,7 @@ describe('InputComponent', function () {
         const renderer = createRenderer();
 
         renderer.render(
-            <InputComponentTest value={1}/>
+            <InputComponentTest value={1} onChange={() => {}} />
         );
 
         const actualElement = renderer.getRenderOutput();
@@ -74,7 +74,8 @@ describe('InputComponent', function () {
                 value={1}
                 disabled={false}
                 readOnly={false}
-                valid={false} />
+                valid={false}
+                onChange={() => {}} />
         );
 
         expect(renderer.getRenderOutput()).toEqualJSX(
@@ -89,7 +90,7 @@ describe('InputComponent', function () {
         const renderer = createRenderer();
 
         renderer.render(
-            <InputComponentTest defaultValue={1}/>
+            <InputComponentTest defaultValue={1} />
         );
 
         const actualElement = renderer.getRenderOutput();
@@ -129,7 +130,9 @@ describe('InputComponent', function () {
         document.body.appendChild(container);
 
         render(
-            <Form><InputComponentTest value={1} /></Form>,
+            <Form>
+                <InputComponentTest value={1} onChange={() => {}} />
+            </Form>,
             container,
             function () {
                 expect(attachFormSpy).toHaveBeenCalled();
@@ -140,91 +143,6 @@ describe('InputComponent', function () {
             }
         );
 
-
-    });
-
-    it('uncontrolled', function (done) {
-
-        class UncontrolledComponent extends Component {
-
-            render() {
-
-                return (
-                    <InputComponentTest
-                        defaultValue='default-value'
-                        onChange={e => {
-                            expect(e.value).toBe('123');
-                        }} />
-                );
-
-            }
-
-        }
-
-        const component = renderIntoDocument(<UncontrolledComponent />);
-        const input = findRenderedComponentWithType(
-            component,
-            InputComponentTest
-        );
-
-        expect(input.getValue()).toBe('default-value');
-
-        input.change('123');
-
-        then(() => {
-            expect(input.state.value).toBe('123');
-            input.change('123');
-        })
-        .then(() => {
-            expect(input.state.value).toBe('123');
-            done();
-        });
-
-    });
-
-    it('controlled', function (done) {
-
-        const changeSpy = jasmine.createSpy();
-
-        class TestComponent extends Component {
-
-            constructor(props) {
-                super(props);
-                this.state = {
-                    value: ''
-                };
-                this.onChange = this.onChange.bind(this);
-            }
-
-            onChange({value}) {
-                this.setState({value}, changeSpy);
-            }
-
-            render() {
-                return (
-                    <InputComponentTest
-                        value={this.state.value}
-                        onChange={this.onChange} />
-                );
-            }
-        }
-
-        const component = renderIntoDocument(<TestComponent />);
-        const input = findRenderedComponentWithType(component, InputComponentTest);
-
-        expect(input.getValue()).toBe('');
-
-        input.change('456');
-
-        then(() => {
-            expect(input.getValue()).toBe('456');
-            expect(changeSpy).toHaveBeenCalled();
-            input.change('123');
-        })
-        .then(() => {
-            expect(input.getValue()).toBe('123');
-            done();
-        });
 
     });
 
@@ -278,21 +196,206 @@ describe('InputComponent', function () {
 
         }
 
+        const changeHandler = () => {};
+
         renderer.render(
-            <InputComponetTest value={1} />
+            <InputComponetTest value={1} onChange={changeHandler} />
         );
 
         renderer.render(
-            <InputComponetTest value={1} />
+            <InputComponetTest value={1} onChange={changeHandler} />
         );
 
         expect(renderAmount).toBe(1);
 
         renderer.render(
-            <InputComponetTest value={2} />
+            <InputComponetTest value={2} onChange={changeHandler} />
         );
 
         expect(renderAmount).toBe(2);
+
+    });
+
+});
+
+describe('InputComponent: Controlled', () => {
+
+    it('sync `value` props to `value` state', function (done) {
+
+        class TestComponent extends Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    value: ''
+                };
+            }
+
+            setValue(value) {
+                this.setState({value});
+            }
+
+
+            render() {
+                return (
+                    <InputComponentTest
+                        value={this.state.value}
+                        onChange={() => {}} />
+                );
+            }
+
+        }
+
+        const component = renderIntoDocument(<TestComponent />);
+        const input = findRenderedComponentWithType(
+            component,
+            InputComponentTest
+        );
+
+        expect(input.getValue()).toBe('');
+
+        const newValue1 = '123';
+
+        component.setValue(newValue1);
+
+        then(() => {
+            expect(input.getValue()).toBe(newValue1);
+            done();
+        });
+
+    });
+
+    it('value not change even though change it manually', function (done) {
+
+        const INITIAL_VALUE = '123';
+
+        class TestComponent extends Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    value: INITIAL_VALUE
+                };
+            }
+
+            render() {
+                return (
+                    <InputComponentTest
+                        value={this.state.value}
+                        onChange={() => {}} />
+                );
+            }
+
+        }
+
+        const component = renderIntoDocument(<TestComponent />);
+        const input = findRenderedComponentWithType(
+            component,
+            InputComponentTest
+        );
+
+        expect(input.getValue()).toBe(INITIAL_VALUE);
+
+        const newValue = '456';
+
+        input.change(newValue);
+
+        then(() => {
+            expect(input.getValue()).toBe(INITIAL_VALUE);
+            done();
+        });
+
+    });
+
+});
+
+describe('InputComponent：Uncontrolled', () => {
+
+    it('will not change while defaultValue change', done => {
+
+        const INITIAL_DEFAULT_VALUE = 'initial-default-value';
+
+        class UncontrolledComponent extends Component {
+
+            constructor(...args) {
+                super(...args);
+                this.state = {
+                    defaultValue: INITIAL_DEFAULT_VALUE
+                };
+            }
+
+            rerender(defaultValue) {
+                this.setState({
+                    defaultValue
+                });
+            }
+
+            render() {
+
+                return (
+                    <InputComponentTest
+                        defaultValue={this.state.defaultValue} />
+                );
+
+            }
+
+        }
+
+        let component = renderIntoDocument(
+            <UncontrolledComponent />
+        );
+
+        let input = findRenderedComponentWithType(
+            component,
+            InputComponentTest
+        );
+
+        expect(input.state.value).toBe(INITIAL_DEFAULT_VALUE);
+
+        const random = Math.round(Math.random() * 1000);
+        component.rerender(random);
+
+        then(() => {
+            expect(input.state.value).toBe(INITIAL_DEFAULT_VALUE);
+            expect(input.state.value).not.toBe(random);
+            done();
+        });
+
+    });
+
+    it('will trigger onChange', function (done) {
+
+        const spy = jasmine.createSpy('UncontrolledInputComponentChange');
+
+        class UncontrolledComponent extends Component {
+
+            render() {
+
+                return (
+                    <InputComponentTest
+                        defaultValue='default-value'
+                        onChange={spy} />
+                );
+
+            }
+
+        }
+
+        const component = renderIntoDocument(<UncontrolledComponent />);
+        const input = findRenderedComponentWithType(
+            component,
+            InputComponentTest
+        );
+
+        expect(input.getValue()).toBe('default-value');
+
+        input.change('123');
+
+        then(() => {
+            expect(input.state.value).toBe('123');
+            expect(spy).toHaveBeenCalled();
+            done();
+        });
 
     });
 

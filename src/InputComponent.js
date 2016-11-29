@@ -45,13 +45,12 @@ export default class InputComponent extends Component {
      */
     componentWillReceiveProps(nextProps) {
 
-        let {value, defaultValue} = nextProps;
+        let value = nextProps.value;
 
-        if (value === void 0) {
-            value = defaultValue;
-        }
-
-        if (value !== this.state.value) {
+        if (
+            nextProps.hasOwnProperty('value')
+            && this.state.value !== value
+        ) {
             this.setState({value});
         }
 
@@ -88,11 +87,14 @@ export default class InputComponent extends Component {
 
         const {onChange, value} = this.props;
 
+        onChange && onChange(e);
+
         // 在 React 中，只要 props 中的 value 是 undefined
         // 那么 input 就会进入 uncontrolled 模式
-        // 这种对应着 controlled 组件逻辑，controlled 模式我们就啥也不管啦
+        // 这种对应着 controlled 组件逻辑，
+        // 在 controlled 模式下，我们就不需要将 value 同步到 state 中；
+        // 这个同步的过程是在 componentWillReceiveProps 中处理的；
         if (value !== void 0) {
-            onChange && onChange(e);
             callback && callback();
             return;
         }
@@ -153,7 +155,35 @@ InputComponent.propTypes = {
     name: PropTypes.string,
     readOnly: PropTypes.bool,
     valid: PropTypes.bool,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    value(props, propName, componentName) {
+        if (
+            props.hasOwnProperty(propName)
+            && !props.hasOwnProperty('onChange')
+            && !props.readOnly
+        ) {
+            return new Error(`\
+Failed form propType: You provided a \`value\` prop to a \
+form field without an \`onChange\` handler. This will \
+render a read-only field. If the field should be mutable \
+use \`defaultValue\`. Otherwise, set either \`onChange\` or \
+\`readOnly\`. Check the render method of \`${componentName}\`.`);
+
+        }
+    },
+    defaultValue(props, propName, componentName) {
+        if (
+            props.hasOwnProperty(propName)
+            && props.hasOwnProperty('value')
+        ) {
+
+            return new Error(`\
+${componentName} with both value and defaultValue props.\
+InputComponent must be either controlled or uncontrolled \
+(specify either the value prop, or the defaultValue prop, but not both).`);
+
+        }
+    }
 };
 
 InputComponent.defaultProps = {};
