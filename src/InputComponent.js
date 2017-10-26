@@ -5,7 +5,8 @@
 * @author leon <ludafa@outlook.com>
 */
 
-import {Component, PropTypes} from 'react';
+import {Component} from 'react';
+import PropTypes from 'prop-types';
 import shallowEqual from './util/shallowEqual';
 
 export default class InputComponent extends Component {
@@ -22,13 +23,14 @@ export default class InputComponent extends Component {
      * 这里主要做一件事，就是注册到 form 上，让 form 在 getData() / validate() 时避免递归遍历
      */
     componentDidMount() {
-
         const attachForm = this.context.attachForm;
-
         if (attachForm) {
             attachForm(this);
         }
+    }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !shallowEqual(this.state, nextState) || !shallowEqual(this.props, nextProps);
     }
 
     /**
@@ -54,17 +56,6 @@ export default class InputComponent extends Component {
             this.setState({value});
         }
 
-    }
-
-    /**
-     * 是否应当更新组件
-     *
-     * @param {*} nextProps 下一个属性
-     * @param {*} nextState 下一个状态
-     * @return {boolean}
-     */
-    shouldComponentUpdate(nextProps, nextState) {
-        return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
     }
 
     componentWillUnmount() {

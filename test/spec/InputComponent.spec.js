@@ -3,9 +3,11 @@
  * @author Leon Lu(ludafa@baidu.com)
  */
 
-import React, {Component, PropTypes} from 'react';
+import {shallow} from 'enzyme';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {render, unmountComponentAtNode} from 'react-dom';
-import {createRenderer, renderIntoDocument, findRenderedComponentWithType} from 'react-addons-test-utils';
+import {renderIntoDocument, findRenderedComponentWithType} from 'react-dom/test-utils';
 
 import {create} from '../../src/classname/cxBuilder';
 import InputComponent from '../../src/InputComponent';
@@ -40,64 +42,50 @@ describe('InputComponent', function () {
 
     it('should get value in state from props', function () {
 
-        const renderer = createRenderer();
-
-        renderer.render(
+        let wrapper = shallow(
             <InputComponentTest value={1} onChange={() => {}} />
         );
 
-        const actualElement = renderer.getRenderOutput();
-
-        const expectedElement = (
-            <div className="ui-input-component-test">1</div>
-        );
-
-        expect(actualElement).toEqualJSX(expectedElement);
+        expect(wrapper.is('div')).toBe(true);
+        expect(wrapper.text()).toBe('1');
 
     });
 
     it('state class names', function () {
 
-        const renderer = createRenderer();
-
-        renderer.render(
-            <InputComponentTest value={1} disabled readOnly valid />
-        );
-
-        expect(renderer.getRenderOutput()).toEqualJSX(
-            <div
-                className="ui-input-component-test state-disabled state-read-only state-valid">1</div>
-        );
-
-        renderer.render(
+        let wrapper = shallow(
             <InputComponentTest
                 value={1}
-                disabled={false}
-                readOnly={false}
-                valid={false}
-                onChange={() => {}} />
+                disabled
+                readOnly
+                valid
+                onChange={() => {}}
+            />
         );
 
-        expect(renderer.getRenderOutput()).toEqualJSX(
-            <div className="ui-input-component-test state-invalid">1</div>
-        );
+        expect(wrapper.hasClass('state-disabled')).toBe(true);
+        expect(wrapper.hasClass('state-read-only')).toBe(true);
+        expect(wrapper.hasClass('state-valid')).toBe(true);
 
+        wrapper.setProps({
+            disabled: false,
+            readOnly: false,
+            valid: false
+        });
+
+        expect(wrapper.hasClass('state-disabled')).toBe(false);
+        expect(wrapper.hasClass('state-read-only')).toBe(false);
+        expect(wrapper.hasClass('state-valid')).toBe(false);
 
     });
 
     it('defaultValue', function () {
 
-        const renderer = createRenderer();
-
-        renderer.render(
+        let wrapper = shallow(
             <InputComponentTest defaultValue={1} />
         );
 
-        const actualElement = renderer.getRenderOutput();
-
-        const expectedElement = (<div className="ui-input-component-test">1</div>);
-
-        expect(actualElement).toEqualJSX(expectedElement);
+        expect(wrapper.text()).toBe('1');
 
     });
 
@@ -177,42 +165,6 @@ describe('InputComponent', function () {
 
         expect(typeof input.isDisabled).toBe('function');
         expect(input.isDisabled()).toBe(true);
-
-    });
-
-    it('`pure-render`', function () {
-
-        const renderer = createRenderer();
-
-        let renderAmount = 0;
-
-        class InputComponetTest extends InputComponent {
-
-            render() {
-                renderAmount++;
-                const value = this.state.value;
-                return (<div>{value}</div>);
-            }
-
-        }
-
-        const changeHandler = () => {};
-
-        renderer.render(
-            <InputComponetTest value={1} onChange={changeHandler} />
-        );
-
-        renderer.render(
-            <InputComponetTest value={1} onChange={changeHandler} />
-        );
-
-        expect(renderAmount).toBe(1);
-
-        renderer.render(
-            <InputComponetTest value={2} onChange={changeHandler} />
-        );
-
-        expect(renderAmount).toBe(2);
 
     });
 

@@ -3,13 +3,14 @@
  * @author cxtom(cxtom2010@gmail.com)
  */
 
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
-
+import TestUtils from 'react-dom/test-utils';
 import Form from '../../src/Form';
 import validator from '../../src/Validator';
 import InputComponent from '../../src/InputComponent';
+import {renderIntoDocument, findRenderedDOMComponentWithTag} from 'react-dom/test-utils';
+import {shallow} from 'enzyme';
 
 class InputComponentTest extends InputComponent {
 
@@ -31,7 +32,6 @@ class InputComponentTest extends InputComponent {
 InputComponentTest.contextTypes = InputComponent.contextTypes;
 InputComponentTest.childContextTypes = InputComponent.childContextTypes;
 
-
 describe('Form', () => {
 
     let container;
@@ -48,35 +48,19 @@ describe('Form', () => {
     });
 
     it('dom', () => {
-        let renderer = TestUtils.createRenderer();
-        renderer.render(
-            <Form />
-        );
-        let actualElement = renderer.getRenderOutput();
-        let expectedElement = (
-            <form onSubmit={function noRefCheck() {}}/>
-        );
-        expect(actualElement).toEqualJSX(expectedElement);
+        let wrapper = shallow(<Form />);
+        expect(wrapper.is('form')).toBe(true)
     });
 
     it('functions', done => {
 
-        let component;
         let spy = jasmine.createSpy();
 
-        const TestComponent = React.createClass({
-
-            getInitialState() {
-
-                component = this;
-
-                return {
-                    showText2: true
-                };
-            },
-
+        class TestComponent extends Component {
+            state = {
+                showText2: true
+            };
             render() {
-
                 const input2 = this.state.showText2
                     ? (
                         <InputComponentTest
@@ -85,7 +69,6 @@ describe('Form', () => {
                             rules={{required: true}} />
                     )
                     : null;
-
                 return (
                     <Form ref="form" onSubmit={spy}>
                         <InputComponentTest
@@ -102,40 +85,39 @@ describe('Form', () => {
                     </Form>
                 );
             }
+        }
+
+        let component = renderIntoDocument(<TestComponent />);
+
+        const form = component.refs.form;
+        expect(form.fields.length).toBe(3);
+        expect(form.getData()).toEqual({
+            textbox1: '1',
+            textbox2: ''
         });
 
-        ReactDOM.render(<TestComponent />, container, () => {
+        let validity = form.checkValidity();
 
-            const form = component.refs.form;
-            expect(form.fields.length).toBe(3);
+        expect(validity.isValid).toBe(false);
+        expect(validity.errors.length).toBe(1);
+        expect(form.validate()).toBe(false);
+
+        const node = findRenderedDOMComponentWithTag(form, 'form');
+        TestUtils.Simulate.submit(node);
+
+        expect(spy.calls.count()).toEqual(0);
+
+        component.setState({showText2: false}, () => {
+            expect(form.fields.length).toBe(2);
+            expect(form.isValidFormField(form.fields[0])).toBe(true);
             expect(form.getData()).toEqual({
-                textbox1: '1',
-                textbox2: ''
+                textbox1: '1'
             });
-
-            let validity = form.checkValidity();
-
-            expect(validity.isValid).toBe(false);
-            expect(validity.errors.length).toBe(1);
-            expect(form.validate()).toBe(false);
-
-            const node = document.getElementsByTagName('form')[0];
             TestUtils.Simulate.submit(node);
-
-            expect(spy.calls.count()).toEqual(0);
-
-            component.setState({showText2: false}, () => {
-                expect(form.fields.length).toBe(2);
-                expect(form.isValidFormField(form.fields[0])).toBe(true);
-                expect(form.getData()).toEqual({
-                    textbox1: '1'
-                });
-                TestUtils.Simulate.submit(node);
-                expect(spy.calls.count()).toEqual(1);
-                done();
-            });
-
+            expect(spy.calls.count()).toEqual(1);
+            done();
         });
+
     });
 
 });

@@ -3,10 +3,11 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import validator from './Validator';
 
-export default class Form extends Component {
+export default class Form extends PureComponent {
 
     constructor(props) {
 

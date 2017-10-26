@@ -58,15 +58,6 @@ export class Validator {
 
     }
 
-    createCustomValidity(customValidity) {
-        const validity = new Validity();
-        validity.addState({
-            isValid: false,
-            message: customValidity
-        });
-        return validity;
-    }
-
 }
 
 const validator = new Validator();

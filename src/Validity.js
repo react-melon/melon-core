@@ -3,14 +3,15 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {PropTypes, Component} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {create} from './classname/cxBuilder';
 import V from './validator/Validity';
 import shallowEqual from './util/shallowEqual';
 
 const cx = create('Validity');
 
-export default class Validity extends Component {
+export default class Validity extends PureComponent {
 
     shouldComponentUpdate(nextProps, nextState) {
         return !shallowEqual(this.props, nextProps);

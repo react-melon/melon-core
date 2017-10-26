@@ -40,10 +40,6 @@ export default function shallowEqual(objA, objB, compare, compareContext = null)
 
         const key = keysA[i];
 
-        if (!hasOwn.call(objB, key)) {
-            return false;
-        }
-
         const valueA = objA[key];
         const valueB = objB[key];
 

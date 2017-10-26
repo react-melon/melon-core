@@ -10,12 +10,11 @@ module.exports = {
     basePath: path.join(__dirname, '../'),
 
     frameworks: [
-        'jasmine',
-        'jasmine-expect-jsx'
+        'jasmine'
     ],
 
     files: [
-        'test/spec/**/*.spec.js'
+        'test/index.js'
     ],
 
     browsers: [
@@ -29,11 +28,17 @@ module.exports = {
 
     webpack: {
         module: {
-            preLoaders: [{
-                test: /\.js$/,
-                loader: 'babel',
-                exclude: /node_modules/
-            }]
+            rules: [
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    exclude: /node_modules/
+                },
+                {
+                    test: /\.json$/,
+                    loader: 'json-loader'
+                }
+            ]
         },
         devtool: 'inline-source-map'
     },
