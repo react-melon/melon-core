@@ -4,3 +4,10 @@ dist
 src
 test
 example
+tools
+.babelrc
+.coveralls.yml
+.fecsrc
+.travis.yml
+bower.json
+gulefile.js

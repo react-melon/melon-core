@@ -22,12 +22,10 @@ gulp.task('stylus', function () {
     return gulp.src('src/**/*.styl').pipe(gulp.dest('lib'));
 });
 
-gulp.task('build', ['babel', 'stylus']);
+gulp.task('build', ['babel', 'stylus', 'descriptions']);
 
-gulp.task('clean', function () {
+gulp.task('descriptions', function () {
     return gulp
-        .src('dist', {read: false})
-        .pipe(clean());
+        .src(['package.json', 'README.md'])
+        .pipe(gulp.dest('lib'));
 });
-
-gulp.task('rebuild', ['clean', 'build']);

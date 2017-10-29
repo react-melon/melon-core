@@ -1,6 +1,7 @@
 ### Node ###
 # Logs
 logs
+lib
 *.log
 npm-debug.log*
 
@@ -24,8 +25,6 @@ dep
 
 # Optional npm cache directory
 .npm
-lib/package.json
-lib/readme.md
 
 # Optional REPL history
 .node_repl_history
