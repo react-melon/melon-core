@@ -10,7 +10,7 @@ import Form from '../../src/Form';
 import validator from '../../src/Validator';
 import InputComponent from '../../src/InputComponent';
 import {renderIntoDocument, findRenderedDOMComponentWithTag} from 'react-dom/test-utils';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 
 class InputComponentTest extends InputComponent {
 
@@ -50,6 +50,27 @@ describe('Form', () => {
     it('dom', () => {
         let wrapper = shallow(<Form />);
         expect(wrapper.is('form')).toBe(true)
+    });
+
+    it('should have `fields`', () => {
+
+        let wrapper = mount(
+            <Form>
+                <InputComponentTest defaultValue={1} />
+                <InputComponentTest defaultValue={1} />
+            </Form>
+        );
+
+        let instance = wrapper.instance();
+
+        expect(instance.fields.length).toBe(2);
+
+        wrapper.unmount();
+
+        expect(instance.fields).toBe(null);
+
+        instance = null;
+
     });
 
     it('functions', done => {

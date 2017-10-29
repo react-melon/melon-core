@@ -3,7 +3,7 @@
  * @author Leon Lu(ludafa@baidu.com)
  */
 
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {render, unmountComponentAtNode} from 'react-dom';
@@ -94,43 +94,21 @@ describe('InputComponent', function () {
         const attachFormSpy = jasmine.createSpy('attach');
         const detachFormSpy = jasmine.createSpy('detach');
 
-        class Form extends Component {
-
-            getChildContext() {
-                return {
+        let wrapper = mount(
+            <InputComponentTest value={1} onChange={() => {}} />,
+            {
+                context: {
                     attachForm: attachFormSpy,
                     detachForm: detachFormSpy
-                };
-            }
-
-            render() {
-                return this.props.children;
-            }
-
-        }
-
-        Form.childContextTypes = {
-            attachForm: PropTypes.func,
-            detachForm: PropTypes.func
-        };
-
-        let container = document.createElement('div');
-        document.body.appendChild(container);
-
-        render(
-            <Form>
-                <InputComponentTest value={1} onChange={() => {}} />
-            </Form>,
-            container,
-            function () {
-                expect(attachFormSpy).toHaveBeenCalled();
-                unmountComponentAtNode(container);
-                expect(detachFormSpy).toHaveBeenCalled();
-                document.body.removeChild(container);
-                container = null;
+                }
             }
         );
 
+        expect(attachFormSpy).toHaveBeenCalled();
+
+        wrapper.unmount();
+
+        expect(detachFormSpy).toHaveBeenCalled();
 
     });
 

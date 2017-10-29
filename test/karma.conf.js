@@ -62,6 +62,6 @@ module.exports = {
     },
 
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
+    singleRun: false
 
 };
